@@ -203,81 +203,154 @@ add_action( 'wp_enqueue_scripts', 'jm_theme_scripts' );
 
 // Add Typography Settings to Customizer
 function jm_customize_typography( $wp_customize ) {
-    $wp_customize->add_section( 'jm_typography', array(
-        'title'    => __( 'Typography', 'jm-theme' ),
+    // === Global Typography Section ===
+    $wp_customize->add_section('jm_typography', array(
+        'title'    => __('Global Typography', 'jm-theme'),
         'priority' => 30,
-    ) );
+    ));
 
-    $wp_customize->add_setting( 'jm_text_color', array(
+    // Text Color 
+    $wp_customize->add_setting('jm_text_color', array(
         'default'   => '#000000',
-        'transport' => 'postMessage',
-    ) );
-    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'jm_text_color_control', array(
-        'label'    => __( 'Text Color', 'jm-theme' ),
-        'section'  => 'jm_typography',
+        'transport' => 'refresh',
+        'sanitize_callback' => 'sanitize_hex_color',
+    ));
+    $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'jm_text_color', array(
+        'label'   => __('Text Color ', 'jm-theme'),
+        'section' => 'jm_typography',
         'settings' => 'jm_text_color',
-    ) ) );
+    )));
 
-    $wp_customize->add_setting( 'jm_heading_color', array(
-        'default'   => '#000000',
-        'transport' => 'postMessage',
-    ) );
-    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'jm_heading_color_control', array(
-        'label'    => __( 'Heading Color', 'jm-theme' ),
-        'section'  => 'jm_typography',
+    // Heading Color (h1-h6, but NOT links)
+    $wp_customize->add_setting('jm_heading_color', array(
+        'default'   => '#0000ff',
+        'transport' => 'refresh',
+        'sanitize_callback' => 'sanitize_hex_color',
+    ));
+    $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'jm_heading_color', array(
+        'label'   => __('Heading Color', 'jm-theme'),
+        'section' => 'jm_typography',
         'settings' => 'jm_heading_color',
-    ) ) );
+    )));
 
-    $wp_customize->add_setting( 'jm_text_size', array(
+    // Text Font Size
+    $wp_customize->add_setting('jm_text_font_size', array(
         'default'   => '16px',
-        'transport' => 'postMessage',
-    ) );
-    $wp_customize->add_control( 'jm_text_size_control', array(
-        'label'    => __( 'Text Font Size', 'jm-theme' ),
-        'section'  => 'jm_typography',
-        'settings' => 'jm_text_size',
-        'type'     => 'text',
-    ) );
+        'transport' => 'refresh',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('jm_text_font_size', array(
+        'label'   => __('Text Font Size ', 'jm-theme'),
+        'section' => 'jm_typography',
+        'type'    => 'text',
+    ));
 
-    $wp_customize->add_setting( 'jm_heading_size', array(
-        'default'   => '32px',
-        'transport' => 'postMessage',
-    ) );
-    $wp_customize->add_control( 'jm_heading_size_control', array(
-        'label'    => __( 'Heading Font Size', 'jm-theme' ),
-        'section'  => 'jm_typography',
-        'settings' => 'jm_heading_size',
-        'type'     => 'text',
-    ) );
+    // Heading Font Size
+    $wp_customize->add_setting('jm_heading_font_size', array(
+        'default'   => '24px',
+        'transport' => 'refresh',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('jm_heading_font_size', array(
+        'label'   => __('Heading Font Size', 'jm-theme'),
+        'section' => 'jm_typography',
+        'type'    => 'text',
+    ));
+
+    // === Blog Page Colors Section ===
+    $wp_customize->add_section('jm_blog_colors', array(
+        'title'    => __('Blog Page Colors', 'jm-theme'),
+        'priority' => 31,
+    ));
+
+    // Blog Page Text Color
+    $wp_customize->add_setting('jm_blog_text_color', array(
+        'default'   => '#333333',
+        'transport' => 'refresh',
+        'sanitize_callback' => 'sanitize_hex_color',
+    ));
+    $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'jm_blog_text_color', array(
+        'label'   => __('Blog Text Color', 'jm-theme'),
+        'section' => 'jm_blog_colors',
+        'settings' => 'jm_blog_text_color',
+    )));
+
+     // Blog Page Heading Color
+     $wp_customize->add_setting('jm_blog_heading_color', array(
+        'default'   => '#ff0000',
+        'transport' => 'refresh',
+        'sanitize_callback' => 'sanitize_hex_color',
+    ));
+    $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'jm_blog_heading_color', array(
+        'label'   => __('Blog Page Heading Color', 'jm-theme'),
+        'section' => 'jm_blog_colors',
+        'settings' => 'jm_blog_heading_color',
+    )));
+
+    // Blog Page Text Font Size
+    $wp_customize->add_setting('jm_blog_text_font_size', array(
+        'default'   => '16px',
+        'transport' => 'refresh',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('jm_blog_text_font_size', array(
+        'label'   => __('Blog Text Size', 'jm-theme'),
+        'section' => 'jm_blog_colors',
+        'type'    => 'text',
+    ));
+
+    // Blog Heading Font Size 
+    $wp_customize->add_setting('jm_blog_heading_font_size', array(
+        'default'   => '24px',
+        'transport' => 'refresh',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('jm_blog_heading_font_size', array(
+        'label'   => __('Blog Heading Size', 'jm-theme'),
+        'section' => 'jm_blog_colors',
+        'type'    => 'text',
+    ));
 }
-add_action( 'customize_register', 'jm_customize_typography' );
+add_action('customize_register', 'jm_customize_typography');
 
 // Apply typography settings to the frontend
-function jm_apply_typography_styles() {
+function jm_apply_customizer_styles() {
     ?>
     <style type="text/css">
-        body {
-            color: <?php echo esc_html( get_theme_mod( 'jm_text_color', '#000000' ) ); ?>;
-            font-size: <?php echo esc_html( get_theme_mod( 'jm_text_size', '16px' ) ); ?>;
+        /* Global Styles */
+        body p {
+            color: <?php echo esc_html(get_theme_mod('jm_text_color', '#000000')); ?>;
+            font-size: <?php echo esc_html(get_theme_mod('jm_text_font_size', '16px')); ?>;
         }
+
         h1, h2, h3, h4, h5, h6 {
-            color: <?php echo esc_html( get_theme_mod( 'jm_heading_color', '#000000' ) ); ?>;
-            font-size: <?php echo esc_html( get_theme_mod( 'jm_heading_size', '32px' ) ); ?>;
+            color: <?php echo esc_html(get_theme_mod('jm_heading_color', '#0000ff')); ?>;
+            font-size: <?php echo esc_html(get_theme_mod('jm_heading_font_size', '24px')); ?>;
         }
+
+        /* Blog Page Styles */
+        <?php if (is_home() || is_archive()) : ?>
+            body p {
+                color: <?php echo esc_html(get_theme_mod('jm_blog_text_color', '#333333')); ?>;
+                font-size: <?php echo esc_html(get_theme_mod('jm_blog_text_font_size', '16px')); ?>;
+            }
+
+            h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+                color: <?php echo esc_html(get_theme_mod('jm_blog_heading_color', '#ff0000')); ?>;
+                font-size: <?php echo esc_html(get_theme_mod('jm_blog_heading_font_size', '24px')); ?>;
+            }
+        <?php endif; ?>
     </style>
     <?php
 }
-add_action( 'wp_head', 'jm_apply_typography_styles' );
+add_action('wp_head', 'jm_apply_customizer_styles');
 
 // Display rating on the frontend for pages
 function jm_display_rating_on_page($content) {
     global $post;
 
-    // Check if we're on a static page or the Posts Page
-    if (is_page() || (is_home() && get_option('page_for_posts'))) {
-
-        $post_id = is_home() ? get_option('page_for_posts') : $post->ID;
-
+    if (is_page()) {
+        $post_id = $post->ID;
         $rating = get_post_meta($post_id, '_jm_page_rating', true);
 
         if ($rating) {
@@ -288,11 +361,38 @@ function jm_display_rating_on_page($content) {
         }
     }
 
+    // Check if we're on the blog page and handle infinite scroll
+    if (is_home() && get_option('page_for_posts')) {
+        $post_id = get_option('page_for_posts');
+        $rating = get_post_meta($post_id, '_jm_page_rating', true);
+
+        if ($rating) {
+            $rating_html = '<div id="jm-blog-rating" class="page-rating" style="display: none;">';
+            $rating_html .= '<strong>Rating:</strong> ' . esc_html($rating) . ' / 5';
+            $rating_html .= '</div>';
+            $content .= '<script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    var observer = new IntersectionObserver(function(entries) {
+                        entries.forEach(function(entry) {
+                            if (entry.isIntersecting) {
+                                document.getElementById("jm-blog-rating").style.display = "block";
+                            }
+                        });
+                    }, { threshold: 1.0 });
+
+                    var lastPost = document.querySelector(".post:last-of-type");
+                    if (lastPost) {
+                        observer.observe(lastPost);
+                    }
+                });
+            </script>' . $rating_html;
+        }
+    }
+
     return $content;
 }
 
 add_filter('the_content', 'jm_display_rating_on_page', 20);
-
 
 // funtion for inite ajax scroll
 function jm_load_more_posts() {
